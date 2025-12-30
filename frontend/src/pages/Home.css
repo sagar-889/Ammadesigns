@@ -1,0 +1,218 @@
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    background: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80') center/cover no-repeat;
+    color: var(--white);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(27, 38, 59, 0.8), rgba(27, 38, 59, 0.4));
+    z-index: 1;
+    pointer-events: none;
+    /* Crucial: Overlay must not block clicks */
+}
+
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    max-width: 700px;
+}
+
+.hero-subtitle {
+    display: block;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--secondary);
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.hero-title {
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    line-height: 1.1;
+    margin-bottom: 30px;
+}
+
+.hero-desc {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 20px;
+}
+
+/* Features Section Polish */
+.home-page .section.bg-soft {
+    background-color: var(--bg-soft);
+    background-image: radial-gradient(var(--secondary) 0.5px, transparent 0.5px);
+    background-size: 30px 30px;
+    position: relative;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.home-page .section.bg-soft::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+    opacity: 0.15;
+    pointer-events: none;
+    /* Crucial: Decorative bar must not block clicks */
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.feature-card {
+    background: var(--white);
+    padding: 60px 40px;
+    text-align: center;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 10px 40px rgba(27, 38, 59, 0.05);
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--secondary);
+    transform: scaleX(0);
+    transition: var(--transition);
+    transform-origin: right;
+}
+
+.feature-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 60px rgba(27, 38, 59, 0.12);
+    border-color: var(--secondary);
+}
+
+.feature-card:hover::after {
+    transform: scaleX(1);
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+    display: block;
+}
+
+.feature-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    color: var(--primary);
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Showcase Grid */
+.home-page .section:nth-of-type(3) {
+    background: linear-gradient(to bottom, var(--bg-soft), var(--bg-light));
+}
+
+.showcase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.showcase-content h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 30px;
+    color: var(--primary);
+}
+
+.showcase-content p {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    line-height: 1.8;
+}
+
+.showcase-image {
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+}
+
+.showcase-image img {
+    width: 100%;
+    display: block;
+    transition: var(--transition);
+}
+
+.showcase-image:hover img {
+    transform: scale(1.05);
+}
+
+.bg-primary {
+    background-color: var(--primary);
+}
+
+.text-white {
+    color: var(--white);
+}
+
+@media (max-width: 900px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .showcase-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .hero-content {
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .hero-btns {
+        justify-content: center;
+    }
+
+    .showcase-content {
+        order: 2;
+    }
+
+    .showcase-image {
+        order: 1;
+    }
+}

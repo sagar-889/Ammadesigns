@@ -1,0 +1,145 @@
+.order-success-page {
+  padding-top: 100px;
+  background: var(--bg-soft);
+  min-height: 100vh;
+}
+
+.success-card {
+  background: var(--white);
+  padding: 80px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: #E6F4EA;
+  color: #1E8E3E;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 30px;
+}
+
+.success-card h1 {
+  font-size: 3rem;
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.success-message {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 50px;
+}
+
+.order-details,
+.shipping-details,
+.order-items {
+  text-align: left;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.order-details h3,
+.shipping-details h3,
+.order-items h3 {
+  font-size: 1.4rem;
+  color: var(--primary);
+  margin-bottom: 25px;
+  font-family: 'Cormorant Garamond', serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.detail-row span {
+  color: var(--text-muted);
+}
+
+.detail-row strong {
+  color: var(--primary);
+}
+
+.status-completed {
+  color: #1E8E3E;
+}
+
+.status-confirmed {
+  color: var(--secondary);
+}
+
+.shipping-details p {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+}
+
+.shipping-details strong {
+  color: var(--primary);
+  width: 100px;
+  display: inline-block;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.order-item h4 {
+  font-size: 15px;
+  color: var(--primary);
+}
+
+.order-item p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.item-price {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.success-card .action-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.contact-info {
+  margin-top: 40px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+  .success-card {
+    padding: 40px 20px;
+  }
+
+  .success-card h1 {
+    font-size: 2rem;
+  }
+
+  .success-card .action-buttons {
+    flex-direction: column;
+  }
+}

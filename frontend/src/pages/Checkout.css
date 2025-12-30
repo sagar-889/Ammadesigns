@@ -1,0 +1,244 @@
+.checkout-page {
+  padding-top: 100px;
+  background: var(--bg-soft);
+  min-height: 100vh;
+}
+
+.checkout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.checkout-content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 60px;
+}
+
+.checkout-form {
+  background: var(--white);
+  padding: 50px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.checkout-form h3 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 30px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.checkout-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.checkout-form input {
+  padding: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-soft);
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.address-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.location-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+.address-heading {
+  font-size: 1.2rem;
+  color: var(--primary);
+  margin: 20px 0 10px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.order-summary {
+  background: var(--white);
+  padding: 40px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  height: fit-content;
+  position: sticky;
+  top: 120px;
+}
+
+.order-summary h3 {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.summary-items {
+  margin-bottom: 30px;
+}
+
+.summary-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  align-items: center;
+}
+
+.summary-item img {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.summary-item-details h4 {
+  font-size: 14px;
+  color: var(--primary);
+}
+
+.summary-item-details p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.summary-totals {
+  margin-top: 30px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.summary-row.total {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid var(--accent);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+@media (max-width: 1000px) {
+  .checkout-content {
+    grid-template-columns: 1fr;
+  }
+
+  .order-summary {
+    position: static;
+  }
+}
+
+
+/* Responsive Design - Mobile, Tablet, Desktop */
+
+/* Tablet - 768px to 1199px */
+@media (max-width: 1199px) {
+    .checkout-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .order-summary {
+        order: -1;
+    }
+}
+
+/* Tablet Small - 600px to 767px */
+@media (max-width: 767px) {
+    .checkout-page {
+        padding-top: 120px;
+    }
+    
+    .checkout-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .checkout-form,
+    .order-summary {
+        padding: 30px 20px;
+    }
+    
+    .address-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        font-size: 14px;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    .checkout-page {
+        padding-top: 100px;
+    }
+    
+    .checkout-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .checkout-header h1 {
+        font-size: 2rem;
+    }
+    
+    .checkout-form,
+    .order-summary {
+        padding: 25px 15px;
+        border-radius: var(--radius-sm);
+    }
+    
+    .checkout-form h3,
+    .order-summary h3 {
+        font-size: 1.3rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .location-section button {
+        font-size: 13px;
+        padding: 12px 20px;
+    }
+    
+    .summary-item {
+        gap: 12px;
+    }
+    
+    .summary-item img {
+        width: 60px;
+        height: 75px;
+    }
+    
+    .summary-item h4 {
+        font-size: 0.95rem;
+    }
+    
+    .summary-item p {
+        font-size: 0.85rem;
+    }
+}

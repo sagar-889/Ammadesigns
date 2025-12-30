@@ -1,0 +1,148 @@
+.product-detail-page {
+  padding-top: 100px;
+}
+
+.product-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: flex-start;
+  margin-top: 40px;
+}
+
+.product-image {
+  background: var(--bg-soft);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.product-image img {
+  width: 100%;
+  display: block;
+  transition: var(--transition);
+}
+
+.product-image:hover img {
+  transform: scale(1.03);
+}
+
+.product-details h1 {
+  font-size: 3.5rem;
+  color: var(--primary);
+  margin-bottom: 5px;
+}
+
+.product-details .category {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--secondary);
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.product-details .price {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+}
+
+.description {
+  margin-bottom: 40px;
+}
+
+.description h3 {
+  font-size: 1.2rem;
+  color: var(--primary);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.description p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.stock-info {
+  margin-bottom: 30px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.in-stock {
+  color: #1E8E3E;
+}
+
+.out-of-stock {
+  color: #D93025;
+}
+
+.quantity-selector {
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.quantity-selector label {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 14px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  background: var(--bg-soft);
+  border-radius: var(--radius-lg);
+  padding: 5px 15px;
+}
+
+.quantity-controls button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--primary);
+  padding: 0 10px;
+}
+
+.quantity-controls input {
+  width: 50px;
+  text-align: center;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.action-buttons .btn {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .product-detail {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .product-details h1 {
+    font-size: 2.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}

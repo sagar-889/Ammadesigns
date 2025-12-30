@@ -1,0 +1,31 @@
+PRODUCT IMAGES - FILE NAMES
+============================
+
+Paste your images in this folder with these exact names:
+
+1. designer-blouse.jpg
+2. velvet-blouse.jpg
+3. silk-blouse.jpg
+4. silk-saree.jpg
+5. banarasi-saree.jpg
+6. georgette-saree.jpg
+7. lehenga-choli.jpg
+8. bridal-lehenga.jpg
+9. festive-lehenga.jpg
+10. embroidered-kurti.jpg
+11. printed-kurti.jpg
+12. churidar-set.jpg
+13. salwar-suit.jpg
+14. anarkali-dress.jpg
+15. palazzo-set.jpg
+16. party-gown.jpg
+17. indo-western.jpg
+18. sharara-set.jpg
+19. maxi-dress.jpg
+20. dupatta.jpg
+
+Supported formats: .jpg, .jpeg, .png, .webp
+
+After adding images, run:
+cd backend
+node scripts/updateLocalImages.js

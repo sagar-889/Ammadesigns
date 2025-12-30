@@ -1,0 +1,250 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: var(--nav-height);
+    z-index: var(--z-nav);
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+    pointer-events: none;
+    /* Let clicks pass through transparent areas */
+}
+
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+    height: 70px;
+}
+
+.navbar .container {
+    max-width: 1400px;
+    /* Widening the navbar specifically for a more spread out look */
+}
+
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+    pointer-events: auto;
+    /* Enable clicks for the nav content */
+}
+
+.logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo span {
+    color: var(--secondary);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    /* Increased gap from 32px to 50px */
+}
+
+.nav-links a {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    /* Increased spacing for better legibility */
+    color: var(--primary);
+    opacity: 0.8;
+    position: relative;
+    padding: 5px 10px;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    opacity: 1;
+    color: var(--secondary);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--secondary);
+    transition: var(--transition);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+
+.login-link,
+.account-link {
+    background: var(--primary);
+    color: var(--white) !important;
+    padding: 10px 24px !important;
+    border-radius: var(--radius-sm);
+    opacity: 1 !important;
+}
+
+.login-link:hover,
+.account-link:hover {
+    background: var(--secondary);
+    color: var(--white) !important;
+}
+
+.login-link::after,
+.account-link::after {
+    display: none;
+}
+
+.cart-button {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: var(--transition);
+}
+
+.cart-icon {
+    font-size: 20px;
+    transition: var(--transition);
+}
+
+.cart-button:hover .cart-icon {
+    transform: scale(1.1);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -2px;
+    right: 2px;
+    background: var(--secondary);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-toggle .line {
+    width: 25px;
+    height: 2px;
+    background: var(--primary);
+    transition: var(--transition);
+}
+
+@media (max-width: 900px) {
+    .menu-toggle {
+        display: flex;
+        z-index: 1001;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 280px;
+        background: var(--white);
+        flex-direction: column;
+        justify-content: center;
+        padding: 40px;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        transform: translateX(100%);
+        transition: var(--transition);
+        gap: 25px;
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        transform: translateX(0);
+    }
+    
+    .nav-links a {
+        font-size: 14px;
+        padding: 10px 0;
+    }
+    
+    .logo {
+        font-size: 1.75rem;
+    }
+    
+    .cart-button {
+        justify-content: flex-start;
+        padding: 10px 0;
+    }
+    
+    .cart-icon {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        height: 60px;
+    }
+    
+    .navbar.scrolled {
+        height: 60px;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .nav-links {
+        width: 100%;
+        padding: 30px 20px;
+    }
+    
+    .nav-links a {
+        font-size: 13px;
+        padding: 8px 0;
+    }
+    
+    .login-link,
+    .account-link {
+        padding: 8px 20px !important;
+        font-size: 12px;
+    }
+    
+    .cart-button {
+        padding: 8px 0;
+    }
+    
+    .cart-icon {
+        font-size: 20px;
+    }
+}
