@@ -43,16 +43,18 @@ const Navbar = () => {
             
             {!location.pathname.startsWith('/admin') && (
               <>
-                <li>
-                  <button 
-                    className="cart-button" 
-                    onClick={() => { navigate('/cart'); setIsOpen(false); }}
-                    aria-label="Shopping cart"
-                  >
-                    <span className="cart-icon">🛍️</span>
-                    {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-                  </button>
-                </li>
+                {location.pathname !== '/' && (
+                  <li>
+                    <button 
+                      className="cart-button" 
+                      onClick={() => { navigate('/cart'); setIsOpen(false); }}
+                      aria-label="Shopping cart"
+                    >
+                      <span className="cart-icon">🛍️</span>
+                      {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+                    </button>
+                  </li>
+                )}
                 
                 {isAuthenticated ? (
                   <li>

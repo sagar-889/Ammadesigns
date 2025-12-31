@@ -280,4 +280,17 @@ router.put('/orders/:id/status', authenticateToken, async (req, res) => {
   }
 });
 
+// Update order (alternative endpoint)
+router.put('/orders/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { order_status } = req.body;
+
+  try {
+    await pool.query('UPDATE orders SET order_status = ? WHERE id = ?', [order_status, id]);
+    res.json({ message: 'Order updated' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update order' });
+  }
+});
+
 export default router;

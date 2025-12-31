@@ -16,6 +16,7 @@ import Account from './pages/Account';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import Products from './pages/admin/Products';
+import Orders from './pages/admin/Orders';
 import PrivateRoute from './components/PrivateRoute';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -50,6 +51,11 @@ function AppContent() {
           <Route path="/admin/products" element={
             <PrivateRoute>
               <Products />
+            </PrivateRoute>
+          } />
+          <Route path="/admin/orders" element={
+            <PrivateRoute>
+              <Orders />
             </PrivateRoute>
           } />
         </Routes>

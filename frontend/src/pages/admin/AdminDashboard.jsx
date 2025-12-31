@@ -140,7 +140,7 @@ const AdminDashboard = () => {
               <h3>Client Orders</h3>
               <p>Total orders placed through the boutique.</p>
               <div className="stat-display" style={{ fontSize: '3rem', fontWeight: 700, color: 'var(--secondary)' }}>{stats.orders}</div>
-              <button className="btn btn-outline" style={{ marginTop: '20px', width: '100%' }}>View Order Book</button>
+              <button onClick={() => navigate('/admin/orders')} className="btn btn-outline" style={{ marginTop: '20px', width: '100%' }}>View Order Book</button>
             </div>
 
             <div className="admin-card">
