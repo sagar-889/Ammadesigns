@@ -53,7 +53,7 @@ router.post('/signup', [
   }
 });
 
-// Customer Login
+// Customer Login (also handles admin login)
 router.post('/login', [
   body('identifier').notEmpty().withMessage('Email or phone number is required'),
   body('password').notEmpty().withMessage('Password is required')
@@ -66,7 +66,27 @@ router.post('/login', [
   const { identifier, password } = req.body;
 
   try {
-    // Check if identifier is email or phone
+    // Check if it's admin login
+    if (identifier === 'admin@amma.com' && password === 'amma@435') {
+      const token = jwt.sign(
+        { id: 1, email: 'admin@amma.com', type: 'admin' },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      return res.json({
+        token,
+        isAdmin: true,
+        user: {
+          id: 1,
+          name: 'Admin',
+          email: 'admin@amma.com',
+          type: 'admin'
+        }
+      });
+    }
+
+    // Regular customer login
     const isEmail = identifier.includes('@');
     const query = isEmail 
       ? 'SELECT * FROM customers WHERE email = ?' 
@@ -93,6 +113,7 @@ router.post('/login', [
 
     res.json({
       token,
+      isAdmin: false,
       customer: {
         id: customer.id,
         name: customer.name,

@@ -34,6 +34,7 @@
   min-height: calc(100vh - var(--nav-height));
   position: relative;
   z-index: 1;
+  padding-top: var(--nav-height);
 }
 
 * {
@@ -153,6 +154,15 @@ ul {
 }
 
 /* Responsive Utilities */
+
+/* Breakpoints:
+   - Mobile: 0-480px
+   - Mobile Large: 481-767px
+   - Tablet: 768-1199px
+   - Desktop: 1200px+
+*/
+
+/* Desktop (default) - 1200px and above */
 @media (max-width: 1199px) {
   .section {
     padding: 80px 0;
@@ -160,13 +170,27 @@ ul {
   
   .section-title {
     margin-bottom: 40px;
+    font-size: clamp(2rem, 4vw, 3.5rem);
   }
   
   .container {
     padding: 0 20px;
   }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+  }
 }
 
+/* Tablet - 768px to 1199px */
 @media (max-width: 767px) {
   .section {
     padding: 60px 0;
@@ -174,6 +198,7 @@ ul {
   
   .section-title {
     margin-bottom: 35px;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   }
   
   .section-title::after {
@@ -196,8 +221,14 @@ ul {
   h3 {
     font-size: 1.5rem;
   }
+  
+  .btn {
+    padding: 12px 28px;
+    font-size: 13px;
+  }
 }
 
+/* Mobile - 480px and below */
 @media (max-width: 480px) {
   .section {
     padding: 40px 0;
@@ -205,6 +236,12 @@ ul {
   
   .section-title {
     margin-bottom: 30px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+  
+  .section-title::after {
+    width: 40px;
+    margin: 12px auto 0;
   }
   
   .container {
@@ -223,9 +260,34 @@ ul {
     font-size: 1.25rem;
   }
   
+  h4 {
+    font-size: 1.1rem;
+  }
+  
   .btn {
-    padding: 12px 24px;
+    padding: 10px 24px;
     font-size: 12px;
+  }
+  
+  body {
+    font-size: 14px;
+  }
+}
+
+/* Touch-friendly improvements for mobile */
+@media (max-width: 767px) {
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px; /* iOS recommended touch target */
+  }
+  
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
   }
 }
 

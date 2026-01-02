@@ -1,3 +1,7 @@
+/* ============================================= */
+/* BASE NAVBAR STYLES */
+/* ============================================= */
+
 .navbar {
     position: fixed;
     top: 0;
@@ -11,7 +15,6 @@
     backdrop-filter: blur(10px);
     box-shadow: var(--shadow-sm);
     pointer-events: none;
-    /* Let clicks pass through transparent areas */
 }
 
 .navbar.scrolled {
@@ -23,7 +26,6 @@
 
 .navbar .container {
     max-width: 1400px;
-    /* Widening the navbar specifically for a more spread out look */
 }
 
 .nav-wrapper {
@@ -31,10 +33,21 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0 10px;
+    padding: 0 20px;
     pointer-events: auto;
-    /* Enable clicks for the nav content */
 }
+
+/* Desktop Navigation Container */
+.nav-menu-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 4rem;
+}
+
+/* ============================================= */
+/* LOGO */
+/* ============================================= */
 
 .logo {
     font-family: 'Cormorant Garamond', serif;
@@ -44,6 +57,8 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .logo span {
@@ -52,11 +67,25 @@
     font-weight: 400;
 }
 
+.logo:hover {
+    color: var(--secondary);
+}
+
+/* ============================================= */
+/* NAVIGATION LINKS */
+/* ============================================= */
+
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 50px;
-    /* Increased gap from 32px to 50px */
+    gap: 2.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    margin: 0;
 }
 
 .nav-links a {
@@ -64,11 +93,12 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    /* Increased spacing for better legibility */
     color: var(--primary);
     opacity: 0.8;
     position: relative;
     padding: 5px 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 .nav-links a:hover,
@@ -93,6 +123,10 @@
     width: 100%;
 }
 
+/* ============================================= */
+/* USER LINKS (LOGIN/ACCOUNT) */
+/* ============================================= */
+
 .login-link,
 .account-link {
     background: var(--primary);
@@ -100,6 +134,11 @@
     padding: 10px 24px !important;
     border-radius: var(--radius-sm);
     opacity: 1 !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
 }
 
 .login-link:hover,
@@ -112,6 +151,20 @@
 .account-link::after {
     display: none;
 }
+
+.user-icon,
+.login-icon {
+    font-size: 1rem;
+}
+
+.user-text,
+.login-text {
+    font-size: 0.9rem;
+}
+
+/* ============================================= */
+/* CART BUTTON */
+/* ============================================= */
 
 .cart-button {
     position: relative;
@@ -149,6 +202,10 @@
     line-height: 1.2;
 }
 
+/* ============================================= */
+/* MOBILE MENU TOGGLE */
+/* ============================================= */
+
 .menu-toggle {
     display: none;
     flex-direction: column;
@@ -156,6 +213,13 @@
     background: none;
     border: none;
     cursor: pointer;
+    z-index: 10001;
+    position: relative;
+    width: 30px;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
 .menu-toggle .line {
@@ -163,54 +227,183 @@
     height: 2px;
     background: var(--primary);
     transition: var(--transition);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-@media (max-width: 900px) {
+.menu-toggle .line1 {
+    top: 0;
+}
+
+.menu-toggle .line2 {
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.menu-toggle .line3 {
+    bottom: 0;
+}
+
+.close-icon {
+    font-size: 28px;
+    color: var(--primary);
+    font-weight: 300;
+    line-height: 1;
+}
+
+/* ============================================= */
+/* RESPONSIVE BREAKPOINTS */
+/* ============================================= */
+
+/* Desktop Large (1025px and above) - Default styles apply */
+
+/* Tablet (769px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .navbar {
+        height: 70px;
+    }
+    
+    .navbar.scrolled {
+        height: 65px;
+    }
+    
+    .logo {
+        font-size: 1.8rem;
+    }
+    
+    .nav-links {
+        gap: 30px;
+    }
+    
+    .nav-links a {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+    
+    .login-link,
+    .account-link {
+        padding: 8px 18px !important;
+        font-size: 12px;
+    }
+    
+    .cart-icon {
+        font-size: 18px;
+    }
+}
+
+/* Mobile & Small Tablet (below 768px) */
+@media (max-width: 768px) {
     .menu-toggle {
         display: flex;
-        z-index: 1001;
+        z-index: 10001;
     }
 
-    .nav-links {
+    .nav-menu-container {
         position: fixed;
         top: 0;
         right: 0;
         height: 100vh;
-        width: 280px;
+        width: 320px;
         background: var(--white);
-        flex-direction: column;
-        justify-content: center;
-        padding: 40px;
         box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
         transform: translateX(100%);
         transition: var(--transition);
-        gap: 25px;
-        z-index: 1000;
+        z-index: 10000;
+        overflow-y: auto;
     }
 
-    .nav-links.active {
+    .nav-menu-container.active {
         transform: translateX(0);
+    }
+
+    .nav-links {
+        position: static;
+        height: auto;
+        width: 100%;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 100px 30px 40px;
+        box-shadow: none;
+        transform: none;
+        gap: 20px;
+    }
+    
+    .nav-links li {
+        width: 100%;
     }
     
     .nav-links a {
-        font-size: 14px;
-        padding: 10px 0;
+        font-size: 15px;
+        padding: 12px 15px;
+        width: 100%;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover,
+    .nav-links a:focus {
+        background-color: #f8f8f8;
+    }
+    
+    .nav-links a.active {
+        background-color: #f0f0f0;
     }
     
     .logo {
         font-size: 1.75rem;
+        z-index: 10001;
+        position: relative;
+    }
+    
+    .cart-item {
+        width: 100%;
     }
     
     .cart-button {
-        justify-content: flex-start;
-        padding: 10px 0;
+        justify-content: center;
+        padding: 12px 15px !important;
+        width: 100%;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        font-size: 15px;
     }
     
     .cart-icon {
-        font-size: 22px;
+        font-size: 20px;
+    }
+    
+    .cart-badge {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin-left: 8px;
+    }
+    
+    .login-link,
+    .account-link {
+        justify-content: center;
+        padding: 12px 15px !important;
+        font-size: 15px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .user-text,
+    .login-text {
+        display: inline;
+    }
+    
+    .user-icon,
+    .login-icon {
+        font-size: 18px;
     }
 }
 
+/* Small Mobile (below 480px) */
 @media (max-width: 480px) {
     .navbar {
         height: 60px;
@@ -221,30 +414,41 @@
     }
     
     .logo {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+        z-index: 10001;
+    }
+    
+    .nav-menu-container {
+        width: 100%;
     }
     
     .nav-links {
-        width: 100%;
-        padding: 30px 20px;
+        padding: 80px 20px 30px;
+        gap: 15px;
     }
     
     .nav-links a {
-        font-size: 13px;
-        padding: 8px 0;
+        font-size: 14px;
+        padding: 10px 12px;
     }
     
     .login-link,
     .account-link {
-        padding: 8px 20px !important;
-        font-size: 12px;
+        padding: 10px 12px !important;
+        font-size: 14px;
     }
     
     .cart-button {
-        padding: 8px 0;
+        padding: 10px 12px !important;
+        font-size: 14px;
     }
     
     .cart-icon {
-        font-size: 20px;
+        font-size: 18px;
+    }
+    
+    .user-icon,
+    .login-icon {
+        font-size: 16px;
     }
 }

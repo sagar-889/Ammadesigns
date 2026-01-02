@@ -4,7 +4,7 @@ import api from '../../config/api';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState({ products: 0, orders: 0, enquiries: 0 });
+  const [stats, setStats] = useState({ products: 0, orders: 0, enquiries: 0, services: 0, gallery: 0 });
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [enquiries, setEnquiries] = useState([]);
@@ -30,10 +30,12 @@ const AdminDashboard = () => {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const [prodRes, orderRes, enquiryRes] = await Promise.all([
+      const [prodRes, orderRes, enquiryRes, servicesRes, galleryRes] = await Promise.all([
         api.get('/admin/products'),
         api.get('/admin/orders'),
-        api.get('/admin/contacts')
+        api.get('/admin/contacts'),
+        api.get('/services'),
+        api.get('/gallery')
       ]);
       setProducts(prodRes.data);
       setOrders(orderRes.data);
@@ -41,7 +43,9 @@ const AdminDashboard = () => {
       setStats({
         products: prodRes.data.length,
         orders: orderRes.data.length,
-        enquiries: enquiryRes.data.length
+        enquiries: enquiryRes.data.length,
+        services: servicesRes.data.length,
+        gallery: galleryRes.data.length
       });
     } catch (err) {
       console.error('Dashboard fetch failed:', err);
@@ -141,6 +145,20 @@ const AdminDashboard = () => {
               <p>Total orders placed through the boutique.</p>
               <div className="stat-display" style={{ fontSize: '3rem', fontWeight: 700, color: 'var(--secondary)' }}>{stats.orders}</div>
               <button onClick={() => navigate('/admin/orders')} className="btn btn-outline" style={{ marginTop: '20px', width: '100%' }}>View Order Book</button>
+            </div>
+
+            <div className="admin-card">
+              <h3>The Lookbook</h3>
+              <p>Gallery images showcasing your work.</p>
+              <div className="stat-display" style={{ fontSize: '3rem', fontWeight: 700, color: 'var(--primary)' }}>{stats.gallery}</div>
+              <button onClick={() => navigate('/admin/gallery')} className="btn btn-outline" style={{ marginTop: '20px', width: '100%' }}>Manage Gallery</button>
+            </div>
+
+            <div className="admin-card">
+              <h3>Studio Services</h3>
+              <p>Tailoring and customization services offered.</p>
+              <div className="stat-display" style={{ fontSize: '3rem', fontWeight: 700, color: 'var(--secondary)' }}>{stats.services}</div>
+              <button onClick={() => navigate('/admin/services')} className="btn btn-outline" style={{ marginTop: '20px', width: '100%' }}>Manage Services</button>
             </div>
 
             <div className="admin-card">

@@ -17,6 +17,8 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import Products from './pages/admin/Products';
 import Orders from './pages/admin/Orders';
+import ManageServices from './pages/admin/ManageServices';
+import ManageGallery from './pages/admin/ManageGallery';
 import PrivateRoute from './components/PrivateRoute';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
@@ -56,6 +58,16 @@ function AppContent() {
           <Route path="/admin/orders" element={
             <PrivateRoute>
               <Orders />
+            </PrivateRoute>
+          } />
+          <Route path="/admin/services" element={
+            <PrivateRoute>
+              <ManageServices />
+            </PrivateRoute>
+          } />
+          <Route path="/admin/gallery" element={
+            <PrivateRoute>
+              <ManageGallery />
             </PrivateRoute>
           } />
         </Routes>

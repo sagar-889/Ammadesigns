@@ -18,7 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/shop';
+  const from = location.state?.from || '/shop';
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,8 +30,14 @@ const Login = () => {
     setError('');
 
     try {
-      await login(formData.identifier, formData.password);
-      navigate(from, { replace: true });
+      const response = await login(formData.identifier, formData.password);
+      
+      // Check if admin login
+      if (response.isAdmin) {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
     } finally {
@@ -189,7 +195,6 @@ const Login = () => {
 
         <div className="auth-footer">
           <p>Don't have an account? <Link to="/signup">Create One</Link></p>
-          <Link to="/admin/login" className="admin-link">Admin Portal</Link>
         </div>
       </div>
     </div>

@@ -1,8 +1,32 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Home.css';
 
 const Home = () => {
     const shopName = import.meta.env.VITE_SHOP_NAME || 'Sri Ladies Tailor';
+    const { isAuthenticated } = useAuth();
+    const navigate = useNavigate();
+
+    const handleShopClick = (e) => {
+        if (!isAuthenticated) {
+            e.preventDefault();
+            navigate('/login', { state: { from: '/shop' } });
+        }
+    };
+
+    const handleServicesClick = (e) => {
+        if (!isAuthenticated) {
+            e.preventDefault();
+            navigate('/login', { state: { from: '/services' } });
+        }
+    };
+
+    const handleGalleryClick = (e) => {
+        if (!isAuthenticated) {
+            e.preventDefault();
+            navigate('/login', { state: { from: '/gallery' } });
+        }
+    };
 
     return (
         <div className="home-page">
@@ -18,8 +42,12 @@ const Home = () => {
                             bespoke tailoring, handcrafted for your unique silhouette.
                         </p>
                         <div className="hero-btns">
-                            <Link to="/shop" className="btn btn-primary">Shop Collection</Link>
-                            <Link to="/services" className="btn btn-outline" style={{ color: 'white', borderColor: 'white' }}>Our Services</Link>
+                            <Link to="/shop" onClick={handleShopClick} className="btn btn-primary">
+                                Shop Collection
+                            </Link>
+                            <Link to="/services" onClick={handleServicesClick} className="btn btn-outline" style={{ color: 'white', borderColor: 'white' }}>
+                                Our Services
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -59,7 +87,9 @@ const Home = () => {
                                 Your special day deserves a special ensemble. Our bridal boutique
                                 specializes in intricate embroidery and hand-worked details.
                             </p>
-                            <Link to="/gallery" className="btn btn-gold">View Lookbook</Link>
+                            <Link to="/gallery" onClick={handleGalleryClick} className="btn btn-gold">
+                                View Lookbook
+                            </Link>
                         </div>
                         <div className="showcase-image reveal">
                             <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80" alt="Bridal" />

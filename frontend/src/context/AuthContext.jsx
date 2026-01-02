@@ -37,7 +37,15 @@ export const AuthProvider = ({ children }) => {
   const login = async (identifier, password) => {
     const response = await api.post('/auth/login', { identifier, password });
     localStorage.setItem('customerToken', response.data.token);
-    setUser(response.data.customer);
+    
+    // Handle admin login
+    if (response.data.isAdmin) {
+      localStorage.setItem('token', response.data.token); // Also set admin token
+      setUser(response.data.user);
+    } else {
+      setUser(response.data.customer);
+    }
+    
     return response.data;
   };
 

@@ -5,6 +5,8 @@ import publicRoutes from './routes/public.js';
 import adminRoutes from './routes/admin.js';
 import shopRoutes from './routes/shop.js';
 import authRoutes from './routes/auth.js';
+import servicesRoutes from './routes/services.js';
+import galleryRoutes from './routes/gallery.js';
 
 dotenv.config();
 
@@ -21,6 +23,8 @@ app.use('/api', publicRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/shop', shopRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/services', servicesRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 // Health check
 app.get('/', (req, res) => {

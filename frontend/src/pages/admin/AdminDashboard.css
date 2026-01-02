@@ -261,3 +261,132 @@
     font-size: 1.1rem;
   }
 }
+
+/* Responsive Design - Mobile, Tablet, Desktop */
+
+/* Tablet - 768px to 1199px */
+@media (max-width: 1199px) {
+    .admin-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    
+    .header-actions {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+    }
+    
+    .header-actions button {
+        flex: 1;
+    }
+}
+
+/* Tablet Small - 600px to 767px */
+@media (max-width: 767px) {
+    .admin-dashboard {
+        padding: 100px 0 40px;
+    }
+    
+    .admin-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .admin-card {
+        padding: 25px 20px;
+    }
+    
+    .admin-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .stat-display {
+        font-size: 2.5rem !important;
+    }
+    
+    .admin-tabs {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .admin-tabs button {
+        padding: 10px 16px;
+        font-size: 12px;
+        flex: 1;
+        min-width: calc(50% - 4px);
+    }
+    
+    .enquiry-card {
+        padding: 20px 15px;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    .admin-dashboard {
+        padding: 80px 0 30px;
+    }
+    
+    .admin-header h1 {
+        font-size: 2rem;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+    }
+    
+    .header-actions button {
+        width: 100%;
+        font-size: 12px;
+        padding: 10px 20px;
+    }
+    
+    .admin-card {
+        padding: 20px 15px;
+    }
+    
+    .admin-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .admin-card p {
+        font-size: 0.9rem;
+    }
+    
+    .stat-display {
+        font-size: 2rem !important;
+    }
+    
+    .admin-tabs button {
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+    
+    .enquiry-card {
+        padding: 15px 12px;
+    }
+    
+    .enquiry-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .enquiry-date {
+        font-size: 11px;
+    }
+    
+    .modal-content {
+        padding: 25px 15px;
+        max-width: 95%;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr !important;
+    }
+}

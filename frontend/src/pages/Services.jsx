@@ -130,7 +130,7 @@ const Services = () => {
 
             {/* Enquiry Modal */}
             {showEnquiryModal && (
-                <div className="modal-overlay" onClick={() => setShowEnquiryModal(false)}>
+                <div className="modal-overlay service-modal" onClick={() => setShowEnquiryModal(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h2>Service Enquiry</h2>
