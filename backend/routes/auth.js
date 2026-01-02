@@ -9,7 +9,7 @@ const router = express.Router();
 // Customer Signup
 router.post('/signup', [
   body('name').trim().notEmpty().withMessage('Name is required'),
-  body('email').isEmail().withMessage('Valid email is required'),
+  body('email').optional({ checkFalsy: true }).isEmail().withMessage('Valid email format required'),
   body('phone').matches(/^[0-9]{10}$/).withMessage('Valid 10-digit phone number required'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
 ], async (req, res) => {
@@ -21,31 +21,40 @@ router.post('/signup', [
   const { name, email, phone, password, address } = req.body;
 
   try {
-    // Check if customer already exists
-    const [existing] = await pool('SELECT * FROM customers WHERE email = ?', [email]);
-    if (existing.length > 0) {
-      return res.status(400).json({ error: 'Email already registered' });
+    // Check if customer already exists with this phone
+    const [existingPhone] = await pool('SELECT * FROM customers WHERE phone = $1', [phone]);
+    if (existingPhone.length > 0) {
+      return res.status(400).json({ error: 'Phone number already registered' });
+    }
+
+    // Check if email is provided and already exists
+    if (email) {
+      const [existingEmail] = await pool('SELECT * FROM customers WHERE email = $1', [email]);
+      if (existingEmail.length > 0) {
+        return res.status(400).json({ error: 'Email already registered' });
+      }
     }
 
     // Hash password
     const password_hash = await bcrypt.hash(password, 10);
 
-    // Create customer
+    // Create customer - use phone as email if email not provided
+    const customerEmail = email || `${phone}@phone.local`;
     const [result] = await pool(
-      'INSERT INTO customers (name, email, phone, password_hash, address) VALUES (?, ?, ?, ?, ?) RETURNING id',
-      [name, email, phone, password_hash, address || null]
+      'INSERT INTO customers (name, email, phone, password_hash, address) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+      [name, customerEmail, phone, password_hash, address || null]
     );
 
     // Generate token
     const token = jwt.sign(
-      { id: result[0].id, email, type: 'customer' },
+      { id: result[0].id, email: customerEmail, type: 'customer' },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
     res.status(201).json({
       token,
-      customer: { id: result[0].id, name, email, phone }
+      customer: { id: result[0].id, name, email: customerEmail, phone }
     });
   } catch (error) {
     console.error('Signup error:', error);
