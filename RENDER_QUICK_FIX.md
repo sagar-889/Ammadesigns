@@ -2,20 +2,33 @@
 
 ## The Problem
 ```
-Error: Cannot find module '/opt/render/project/src/server.js'
+Error: ENOENT: no such file or directory, open '/opt/render/project/src/package.json'
 ```
 
-Render is looking for `server.js` in the root, but it's in the `backend/` folder.
+Render can't find package.json because you're deploying as a Web Service instead of a Blueprint.
 
 ---
 
 ## ✅ SOLUTION (Choose One)
 
-### Option A: Fix Your Existing Service (FASTEST)
+### Option A: Use Root package.json (FASTEST - Works with Web Service)
 
-1. **Go to Render Dashboard** → Your Service → Settings
+1. **Push the root package.json to GitHub:**
+   ```bash
+   git add package.json
+   git commit -m "Add root package.json for Render"
+   git push origin main
+   ```
 
-2. **Update these fields:**
+2. **Go to Render Dashboard** → Your Service → Settings
+
+3. **Update these fields:**
+   ```
+   Build Command:  npm run build
+   Start Command:  npm start
+   ```
+
+4. **OR use direct commands:**
    ```
    Build Command:  cd backend && npm install
    Start Command:  cd backend && node server.js
@@ -30,33 +43,49 @@ Render is looking for `server.js` in the root, but it's in the `backend/` folder
    RAZORPAY_KEY_SECRET=your_secret
    ```
 
-4. **Save Changes** and **Manual Deploy**
+4. **Save Changes** and trigger **Manual Deploy**
 
 ✅ **Done!** Your backend will now start correctly.
 
 ---
 
-### Option B: Deploy as Blueprint (RECOMMENDED)
+### Option B: Deploy as Blueprint (RECOMMENDED - Cleaner Setup)
 
-1. **Delete your current service** on Render
+**IMPORTANT:** You must use "New Blueprint" not "New Web Service"!
 
-2. **Push the updated render.yaml to GitHub:**
+1. **Delete your current Web Service** on Render Dashboard
+
+2. **Push files to GitHub:**
    ```bash
-   git add render.yaml
-   git commit -m "Fix Render configuration with rootDir"
+   git add package.json render.yaml
+   git commit -m "Add Render configuration"
    git push origin main
    ```
 
 3. **On Render Dashboard:**
-   - Click "New +" → "Blueprint"
+   - Click "New +" → **"Blueprint"** (NOT "Web Service"!)
    - Connect your GitHub repo
-   - Render will create both backend and frontend services automatically
+   - Render will detect render.yaml and create both services automatically
 
 4. **Add Environment Variables** to the backend service:
    - `DATABASE_URL` - Your PostgreSQL connection string
    - `RAZORPAY_KEY_ID` - Your Razorpay key
    - `RAZORPAY_KEY_SECRET` - Your Razorpay secret
    - (JWT_SECRET is auto-generated)
+
+---
+
+## 🎯 Key Difference: Blueprint vs Web Service
+
+**Web Service (what you're using now):**
+- ❌ Ignores render.yaml
+- ❌ Requires manual configuration
+- ❌ Needs root package.json or cd commands
+
+**Blueprint (recommended):**
+- ✅ Uses render.yaml automatically
+- ✅ Creates multiple services at once
+- ✅ Cleaner configuration with rootDir
 
 ---
 
