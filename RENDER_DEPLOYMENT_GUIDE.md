@@ -2,15 +2,26 @@
 
 ## Quick Fix for Current Error
 
-The error `Cannot find module '/opt/render/project/src/index.js'` occurs because Render is looking for the wrong entry point. 
+The error `Cannot find module '/opt/render/project/src/server.js'` occurs because Render is running from the root directory, but your backend code is in the `backend/` folder.
 
-### Solution: Use render.yaml Configuration
+### IMMEDIATE FIX: Update Your Existing Service
 
-The `render.yaml` file in the root directory configures both backend and frontend services correctly.
+If you already created a Web Service on Render:
+
+1. **Go to your service settings on Render Dashboard**
+2. **Update these fields:**
+   - **Build Command**: `cd backend && npm install`
+   - **Start Command**: `cd backend && node server.js`
+3. **Click "Save Changes"**
+4. **Manually trigger a new deploy**
+
+This will fix the path issue immediately.
+
+---
 
 ## Deployment Steps
 
-### Option 1: Deploy with render.yaml (Recommended)
+### Option 1: Deploy with render.yaml (Recommended for New Deployments)
 
 1. **Push the render.yaml file to your GitHub repository**
    ```bash
