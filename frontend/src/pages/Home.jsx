@@ -35,7 +35,7 @@ const Home = () => {
                 <div className="hero-overlay"></div>
                 <div className="container">
                     <div className="hero-content reveal-up">
-                        <span className="hero-subtitle">Est. 1995</span>
+                        {/* <span className="hero-subtitle">Est. 1995</span> */}
                         <h1 className="hero-title">{shopName}</h1>
                         <p className="hero-desc">
                             Where tradition meets contemporary style. Experience the luxury of

@@ -10,7 +10,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { getCartCount } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const shopName = import.meta.env.VITE_SHOP_NAME || 'Sri Ladies Tailor';
   const cartCount = getCartCount();
   const navbarRef = useRef(null);
@@ -119,6 +119,15 @@ const Navbar = () => {
               </li>
               <li>
                 <Link 
+                  to="/track-order" 
+                  className={isActive('/track-order') ? 'active' : ''} 
+                  onClick={() => setIsOpen(false)}
+                >
+                  Track Order
+                </Link>
+              </li>
+              <li>
+                <Link 
                   to="/contact" 
                   className={isActive('/contact') ? 'active' : ''} 
                   onClick={() => setIsOpen(false)}
@@ -149,18 +158,35 @@ const Navbar = () => {
                     </li>
                   )}
                   
-                  {/* User Profile / Login */}
-                  <li>
-                    {isAuthenticated ? (
-                      <Link 
-                        to="/account" 
-                        className={`account-link ${isActive('/account') ? 'active' : ''}`} 
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <span className="user-icon" aria-hidden="true">👤</span>
-                        <span className="user-text">Profile</span>
-                      </Link>
-                    ) : (
+                  {/* User Profile / Login / Logout */}
+                  {isAuthenticated ? (
+                    <>
+                      <li>
+                        <Link 
+                          to="/account" 
+                          className={`account-link ${isActive('/account') ? 'active' : ''}`} 
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <span className="user-icon" aria-hidden="true">👤</span>
+                          <span className="user-text">Profile</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <button 
+                          className="logout-button"
+                          onClick={() => {
+                            logout();
+                            setIsOpen(false);
+                            navigate('/');
+                          }}
+                        >
+                          <span className="logout-icon" aria-hidden="true">➜]</span>
+                          <span className="logout-text">Logout</span>
+                        </button>
+                      </li>
+                    </>
+                  ) : (
+                    <li>
                       <Link 
                         to="/login" 
                         className={`login-link ${isActive('/login') ? 'active' : ''}`} 
@@ -169,8 +195,8 @@ const Navbar = () => {
                         <span className="login-icon" aria-hidden="true">🔐</span>
                         <span className="login-text">Login</span>
                       </Link>
-                    )}
-                  </li>
+                    </li>
+                  )}
                 </>
               )}
             </ul>

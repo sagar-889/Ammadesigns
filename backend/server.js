@@ -7,6 +7,7 @@ import shopRoutes from './routes/shop.js';
 import authRoutes from './routes/auth.js';
 import servicesRoutes from './routes/services.js';
 import galleryRoutes from './routes/gallery.js';
+import trackingRoutes from './routes/tracking.js';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use('/api/shop', shopRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/gallery', galleryRoutes);
+app.use('/api/track', trackingRoutes);
 
 // Health check
 app.get('/', (req, res) => {
