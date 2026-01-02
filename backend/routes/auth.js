@@ -22,14 +22,14 @@ router.post('/signup', [
 
   try {
     // Check if customer already exists with this phone
-    const [existingPhone] = await pool('SELECT * FROM customers WHERE phone = $1', [phone]);
+    const [existingPhone] = await pool('SELECT * FROM customers WHERE phone = ?', [phone]);
     if (existingPhone.length > 0) {
       return res.status(400).json({ error: 'Phone number already registered' });
     }
 
     // Check if email is provided and already exists
     if (email) {
-      const [existingEmail] = await pool('SELECT * FROM customers WHERE email = $1', [email]);
+      const [existingEmail] = await pool('SELECT * FROM customers WHERE email = ?', [email]);
       if (existingEmail.length > 0) {
         return res.status(400).json({ error: 'Email already registered' });
       }
@@ -41,7 +41,7 @@ router.post('/signup', [
     // Create customer - use phone as email if email not provided
     const customerEmail = email || `${phone}@phone.local`;
     const [result] = await pool(
-      'INSERT INTO customers (name, email, phone, password_hash, address) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+      'INSERT INTO customers (name, email, phone, password_hash, address) VALUES (?, ?, ?, ?, ?) RETURNING id',
       [name, customerEmail, phone, password_hash, address || null]
     );
 
