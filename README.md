@@ -4,6 +4,18 @@ A full-stack e-commerce web application for a ladies tailor shop with shopping c
 
 ## 🚀 Quick Start
 
+### Using Scripts (Windows)
+
+```bash
+# Install dependencies
+scripts\install.bat
+
+# Start development servers
+scripts\start-dev.bat
+```
+
+### Using npm
+
 ```bash
 # Install dependencies
 npm run install-all
@@ -57,6 +69,12 @@ docs/
 ├── ARCHITECTURE.md                  # System architecture
 ├── API_DOCUMENTATION.md            # API reference
 └── ... (27 total documents)
+
+scripts/
+├── README.md                        # Scripts documentation
+├── install.bat                      # Install dependencies
+├── start-dev.bat                    # Start development
+└── deploy-prep.bat                  # Prepare for deployment
 ```
 
 ## 🚀 Deployment
