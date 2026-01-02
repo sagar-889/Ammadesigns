@@ -57,7 +57,8 @@ Start here if you're new to the project:
 - **[DEPLOYMENT_COMPLETE.md](DEPLOYMENT_COMPLETE.md)** - Complete deployment guide
 
 ### Free Hosting
-- **[ORACLE_CLOUD_DEPLOYMENT.md](ORACLE_CLOUD_DEPLOYMENT.md)** - ⭐ Deploy on Oracle Cloud (FREE Forever)
+- **[VERCEL_RENDER_RAILWAY_DEPLOYMENT.md](VERCEL_RENDER_RAILWAY_DEPLOYMENT.md)** - ⭐ Vercel + Render + Railway (Easiest)
+- **[ORACLE_CLOUD_DEPLOYMENT.md](ORACLE_CLOUD_DEPLOYMENT.md)** - Oracle Cloud (Most Powerful FREE)
 
 ### Production
 - **[PRODUCTION_CHECKLIST.md](PRODUCTION_CHECKLIST.md)** - Pre-launch checklist
@@ -98,10 +99,11 @@ Start here if you're new to the project:
 4. TESTING_MODE.md
 
 ### 🚀 For Deployment
-1. QUICK_DEPLOY.md
-2. ORACLE_CLOUD_DEPLOYMENT.md ⭐ (Recommended)
-3. DEPLOYMENT_COMPLETE.md
-4. PRODUCTION_CHECKLIST.md
+1. VERCEL_RENDER_RAILWAY_DEPLOYMENT.md ⭐ (Easiest - Recommended)
+2. ORACLE_CLOUD_DEPLOYMENT.md (Most Powerful)
+3. QUICK_DEPLOY.md
+4. DEPLOYMENT_COMPLETE.md
+5. PRODUCTION_CHECKLIST.md
 
 ### 🛠️ For Maintenance
 1. ORDER_MANAGEMENT.md
@@ -116,7 +118,8 @@ Start here if you're new to the project:
 **Need to...**
 
 - **Setup the project?** → [GETTING_STARTED.md](GETTING_STARTED.md)
-- **Deploy for free?** → [ORACLE_CLOUD_DEPLOYMENT.md](ORACLE_CLOUD_DEPLOYMENT.md) ⭐
+- **Deploy easily (FREE)?** → [VERCEL_RENDER_RAILWAY_DEPLOYMENT.md](VERCEL_RENDER_RAILWAY_DEPLOYMENT.md) ⭐
+- **Deploy powerful (FREE)?** → [ORACLE_CLOUD_DEPLOYMENT.md](ORACLE_CLOUD_DEPLOYMENT.md)
 - **Configure payments?** → [RAZORPAY_SETUP.md](RAZORPAY_SETUP.md)
 - **Customize design?** → [CUSTOMIZATION_GUIDE.md](CUSTOMIZATION_GUIDE.md)
 - **Setup database?** → [DATABASE_SETUP.md](DATABASE_SETUP.md)

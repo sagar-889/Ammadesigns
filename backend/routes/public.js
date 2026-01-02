@@ -1,13 +1,13 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
-import pool from '../config/db.js';
+import { query as pool } from '../config/db-helper.js';
 
 const router = express.Router();
 
 // GET all services
 router.get('/services', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM services ORDER BY created_at DESC');
+    const [rows] = await pool('SELECT * FROM services ORDER BY created_at DESC');
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch services' });
@@ -17,7 +17,7 @@ router.get('/services', async (req, res) => {
 // GET all gallery images
 router.get('/gallery', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM gallery ORDER BY created_at DESC');
+    const [rows] = await pool('SELECT * FROM gallery ORDER BY created_at DESC');
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch gallery' });
@@ -38,8 +38,8 @@ router.post('/contact', [
   const { name, phone, message } = req.body;
 
   try {
-    await pool.query(
-      'INSERT INTO contacts (name, phone, message) VALUES (?, ?, ?)',
+    await pool(
+      'INSERT INTO contacts (name, phone, message) VALUES (?, ?, ?) RETURNING id',
       [name, phone, message]
     );
     res.status(201).json({ message: 'Contact form submitted successfully' });

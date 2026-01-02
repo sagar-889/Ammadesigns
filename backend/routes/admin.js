@@ -2,7 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
-import pool from '../config/db.js';
+import { query as pool } from '../config/db-helper.js';
 import { authenticateToken } from '../middleware/auth.js';
 import multer from 'multer';
 import path from 'path';
@@ -54,7 +54,7 @@ router.post('/login', [
   const { username, password } = req.body;
 
   try {
-    const [rows] = await pool.query('SELECT * FROM admins WHERE username = ?', [username]);
+    const [rows] = await pool('SELECT * FROM admins WHERE username = ?', [username]);
 
     if (rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -80,7 +80,7 @@ router.post('/login', [
 // Get all contacts (protected)
 router.get('/contacts', authenticateToken, async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM contacts ORDER BY created_at DESC');
+    const [rows] = await pool('SELECT * FROM contacts ORDER BY created_at DESC');
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch contacts' });
@@ -100,11 +100,11 @@ router.post('/services', authenticateToken, [
   const { title, description, price } = req.body;
 
   try {
-    const [result] = await pool.query(
-      'INSERT INTO services (title, description, price) VALUES (?, ?, ?)',
+    const [result] = await pool(
+      'INSERT INTO services (title, description, price) VALUES (?, ?, ?) RETURNING id',
       [title, description, price || null]
     );
-    res.status(201).json({ id: result.insertId, message: 'Service created' });
+    res.status(201).json({ id: result[0].id, message: 'Service created' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to create service' });
   }
@@ -115,7 +115,7 @@ router.put('/services/:id', authenticateToken, async (req, res) => {
   const { title, description, price } = req.body;
 
   try {
-    await pool.query(
+    await pool(
       'UPDATE services SET title = ?, description = ?, price = ? WHERE id = ?',
       [title, description, price || null, id]
     );
@@ -129,7 +129,7 @@ router.delete('/services/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {
-    await pool.query('DELETE FROM services WHERE id = ?', [id]);
+    await pool('DELETE FROM services WHERE id = ?', [id]);
     res.json({ message: 'Service deleted' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete service' });
@@ -148,11 +148,11 @@ router.post('/gallery', authenticateToken, [
   const { image_url, title } = req.body;
 
   try {
-    const [result] = await pool.query(
-      'INSERT INTO gallery (image_url, title) VALUES (?, ?)',
+    const [result] = await pool(
+      'INSERT INTO gallery (image_url, title) VALUES (?, ?) RETURNING id',
       [image_url, title || null]
     );
-    res.status(201).json({ id: result.insertId, message: 'Gallery image added' });
+    res.status(201).json({ id: result[0].id, message: 'Gallery image added' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to add gallery image' });
   }
@@ -163,7 +163,7 @@ router.put('/gallery/:id', authenticateToken, async (req, res) => {
   const { image_url, title } = req.body;
 
   try {
-    await pool.query(
+    await pool(
       'UPDATE gallery SET image_url = ?, title = ? WHERE id = ?',
       [image_url, title || null, id]
     );
@@ -177,7 +177,7 @@ router.delete('/gallery/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {
-    await pool.query('DELETE FROM gallery WHERE id = ?', [id]);
+    await pool('DELETE FROM gallery WHERE id = ?', [id]);
     res.json({ message: 'Gallery image deleted' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete gallery image' });
@@ -187,7 +187,7 @@ router.delete('/gallery/:id', authenticateToken, async (req, res) => {
 // CRUD for Products
 router.get('/products', authenticateToken, async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM products ORDER BY created_at DESC');
+    const [rows] = await pool('SELECT * FROM products ORDER BY created_at DESC');
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch products' });
@@ -206,11 +206,11 @@ router.post('/products', authenticateToken, [
   const { name, description, price, image_url, category, stock, is_available } = req.body;
 
   try {
-    const [result] = await pool.query(
-      'INSERT INTO products (name, description, price, image_url, category, stock, is_available) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    const [result] = await pool(
+      'INSERT INTO products (name, description, price, image_url, category, stock, is_available) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id',
       [name, description, price, image_url || null, category || null, stock || 0, is_available !== false]
     );
-    res.status(201).json({ id: result.insertId, message: 'Product created' });
+    res.status(201).json({ id: result[0].id, message: 'Product created' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to create product' });
   }
@@ -221,7 +221,7 @@ router.put('/products/:id', authenticateToken, async (req, res) => {
   const { name, description, price, image_url, category, stock, is_available } = req.body;
 
   try {
-    await pool.query(
+    await pool(
       'UPDATE products SET name = ?, description = ?, price = ?, image_url = ?, category = ?, stock = ?, is_available = ? WHERE id = ?',
       [name, description, price, image_url || null, category || null, stock || 0, is_available !== false, id]
     );
@@ -235,7 +235,7 @@ router.delete('/products/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {
-    await pool.query('DELETE FROM products WHERE id = ?', [id]);
+    await pool('DELETE FROM products WHERE id = ?', [id]);
     res.json({ message: 'Product deleted' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete product' });
@@ -245,7 +245,7 @@ router.delete('/products/:id', authenticateToken, async (req, res) => {
 // Get all orders
 router.get('/orders', authenticateToken, async (req, res) => {
   try {
-    const [orders] = await pool.query('SELECT * FROM orders ORDER BY created_at DESC');
+    const [orders] = await pool('SELECT * FROM orders ORDER BY created_at DESC');
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch orders' });
@@ -255,12 +255,12 @@ router.get('/orders', authenticateToken, async (req, res) => {
 // Get order details with items
 router.get('/orders/:id', authenticateToken, async (req, res) => {
   try {
-    const [orders] = await pool.query('SELECT * FROM orders WHERE id = ?', [req.params.id]);
+    const [orders] = await pool('SELECT * FROM orders WHERE id = ?', [req.params.id]);
     if (orders.length === 0) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    const [items] = await pool.query('SELECT * FROM order_items WHERE order_id = ?', [req.params.id]);
+    const [items] = await pool('SELECT * FROM order_items WHERE order_id = ?', [req.params.id]);
     res.json({ ...orders[0], items });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch order' });
@@ -273,7 +273,7 @@ router.put('/orders/:id/status', authenticateToken, async (req, res) => {
   const { order_status } = req.body;
 
   try {
-    await pool.query('UPDATE orders SET order_status = ? WHERE id = ?', [order_status, id]);
+    await pool('UPDATE orders SET order_status = ? WHERE id = ?', [order_status, id]);
     res.json({ message: 'Order status updated' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update order status' });
@@ -286,7 +286,7 @@ router.put('/orders/:id', authenticateToken, async (req, res) => {
   const { order_status } = req.body;
 
   try {
-    await pool.query('UPDATE orders SET order_status = ? WHERE id = ?', [order_status, id]);
+    await pool('UPDATE orders SET order_status = ? WHERE id = ?', [order_status, id]);
     res.json({ message: 'Order updated' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update order' });

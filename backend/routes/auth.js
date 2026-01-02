@@ -2,7 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
-import pool from '../config/db.js';
+import { query as pool } from '../config/db-helper.js';
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.post('/signup', [
 
   try {
     // Check if customer already exists
-    const [existing] = await pool.query('SELECT * FROM customers WHERE email = ?', [email]);
+    const [existing] = await pool('SELECT * FROM customers WHERE email = ?', [email]);
     if (existing.length > 0) {
       return res.status(400).json({ error: 'Email already registered' });
     }
@@ -31,21 +31,21 @@ router.post('/signup', [
     const password_hash = await bcrypt.hash(password, 10);
 
     // Create customer
-    const [result] = await pool.query(
-      'INSERT INTO customers (name, email, phone, password_hash, address) VALUES (?, ?, ?, ?, ?)',
+    const [result] = await pool(
+      'INSERT INTO customers (name, email, phone, password_hash, address) VALUES (?, ?, ?, ?, ?) RETURNING id',
       [name, email, phone, password_hash, address || null]
     );
 
     // Generate token
     const token = jwt.sign(
-      { id: result.insertId, email, type: 'customer' },
+      { id: result[0].id, email, type: 'customer' },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
     res.status(201).json({
       token,
-      customer: { id: result.insertId, name, email, phone }
+      customer: { id: result[0].id, name, email, phone }
     });
   } catch (error) {
     console.error('Signup error:', error);
@@ -92,7 +92,7 @@ router.post('/login', [
       ? 'SELECT * FROM customers WHERE email = ?' 
       : 'SELECT * FROM customers WHERE phone = ?';
     
-    const [rows] = await pool.query(query, [identifier]);
+    const [rows] = await pool(query, [identifier]);
     
     if (rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -144,7 +144,7 @@ router.get('/profile', async (req, res) => {
       return res.status(403).json({ error: 'Invalid token type' });
     }
 
-    const [rows] = await pool.query(
+    const [rows] = await pool(
       'SELECT id, name, email, phone, address, created_at FROM customers WHERE id = ?',
       [verified.id]
     );
@@ -201,7 +201,7 @@ router.put('/profile', [
     }
 
     values.push(verified.id);
-    await pool.query(
+    await pool(
       `UPDATE customers SET ${updates.join(', ')} WHERE id = ?`,
       values
     );
@@ -228,14 +228,14 @@ router.get('/orders', async (req, res) => {
       return res.status(403).json({ error: 'Invalid token type' });
     }
 
-    const [orders] = await pool.query(
+    const [orders] = await pool(
       'SELECT * FROM orders WHERE customer_id = ? ORDER BY created_at DESC',
       [verified.id]
     );
 
     // Get order items for each order
     for (let order of orders) {
-      const [items] = await pool.query(
+      const [items] = await pool(
         'SELECT * FROM order_items WHERE order_id = ?',
         [order.id]
       );
@@ -262,7 +262,7 @@ router.post('/reset-password', [
 
   try {
     // Check if customer exists with this phone number
-    const [rows] = await pool.query('SELECT * FROM customers WHERE phone = ?', [phone]);
+    const [rows] = await pool('SELECT * FROM customers WHERE phone = ?', [phone]);
     
     if (rows.length === 0) {
       return res.status(404).json({ error: 'No account found with this phone number' });
@@ -272,7 +272,7 @@ router.post('/reset-password', [
     const password_hash = await bcrypt.hash(newPassword, 10);
 
     // Update password
-    await pool.query(
+    await pool(
       'UPDATE customers SET password_hash = ? WHERE phone = ?',
       [password_hash, phone]
     );

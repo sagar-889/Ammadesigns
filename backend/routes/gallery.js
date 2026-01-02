@@ -46,13 +46,13 @@ router.post('/', authenticateToken, async (req, res) => {
     }
     
     const [result] = await db.query(
-      'INSERT INTO gallery (image_url, title) VALUES (?, ?)',
+      'INSERT INTO gallery (image_url, title) VALUES (?, ?) RETURNING id',
       [image_url, title || null]
     );
     
     res.status(201).json({
       message: 'Gallery item created successfully',
-      itemId: result.insertId
+      itemId: result[0].id
     });
   } catch (error) {
     console.error('Error creating gallery item:', error);

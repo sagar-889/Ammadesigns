@@ -2,7 +2,7 @@ import express from 'express';
 import { body, validationResult } from 'express-validator';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
-import pool from '../config/db.js';
+import { query as pool } from '../config/db-helper.js';
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ router.get('/products', async (req, res) => {
     }
 
     query += ' ORDER BY created_at DESC';
-    const [rows] = await pool.query(query, params);
+    const [rows] = await pool(query, params);
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch products' });
@@ -35,7 +35,7 @@ router.get('/products', async (req, res) => {
 // GET single product
 router.get('/products/:id', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM products WHERE id = ?', [req.params.id]);
+    const [rows] = await pool('SELECT * FROM products WHERE id = ?', [req.params.id]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Product not found' });
     }
@@ -48,7 +48,7 @@ router.get('/products/:id', async (req, res) => {
 // GET product categories
 router.get('/categories', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT DISTINCT category FROM products WHERE is_available = TRUE');
+    const [rows] = await pool('SELECT DISTINCT category FROM products WHERE is_available = TRUE');
     res.json(rows.map(row => row.category));
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch categories' });
@@ -88,10 +88,10 @@ router.post('/create-order', [
     const orderNumber = `ORD${Date.now()}`;
 
     // Save order to database
-    const [orderResult] = await pool.query(
+    const [orderResult] = await pool(
       `INSERT INTO orders (order_number, customer_id, customer_name, customer_email, customer_phone, 
        customer_address, customer_state, total_amount, subtotal, shipping_charges, razorpay_order_id, payment_status, order_status) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'pending')`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'pending') RETURNING id`,
       [
         orderNumber,
         customerId || null,
@@ -107,11 +107,11 @@ router.post('/create-order', [
       ]
     );
 
-    const orderId = orderResult.insertId;
+    const orderId = orderResult[0].id;
 
     // Save order items
     for (const item of items) {
-      await pool.query(
+      await pool(
         'INSERT INTO order_items (order_id, product_id, product_name, quantity, price) VALUES (?, ?, ?, ?, ?)',
         [orderId, item.id, item.name, item.quantity, item.price]
       );
@@ -154,20 +154,20 @@ router.post('/verify-payment', [
 
     if (razorpay_signature === expectedSign) {
       // Update order status
-      await pool.query(
+      await pool(
         `UPDATE orders SET payment_status = 'completed', order_status = 'confirmed', 
          razorpay_payment_id = ?, razorpay_signature = ? WHERE id = ?`,
         [razorpay_payment_id, razorpay_signature, dbOrderId]
       );
 
       // Update product stock
-      const [orderItems] = await pool.query(
+      const [orderItems] = await pool(
         'SELECT product_id, quantity FROM order_items WHERE order_id = ?',
         [dbOrderId]
       );
 
       for (const item of orderItems) {
-        await pool.query(
+        await pool(
           'UPDATE products SET stock = stock - ? WHERE id = ?',
           [item.quantity, item.product_id]
         );
@@ -175,7 +175,7 @@ router.post('/verify-payment', [
 
       res.json({ success: true, message: 'Payment verified successfully' });
     } else {
-      await pool.query(
+      await pool(
         'UPDATE orders SET payment_status = \'failed\' WHERE id = ?',
         [dbOrderId]
       );
@@ -190,7 +190,7 @@ router.post('/verify-payment', [
 // GET order details
 router.get('/orders/:orderNumber', async (req, res) => {
   try {
-    const [orders] = await pool.query(
+    const [orders] = await pool(
       'SELECT * FROM orders WHERE order_number = ?',
       [req.params.orderNumber]
     );
@@ -201,7 +201,7 @@ router.get('/orders/:orderNumber', async (req, res) => {
 
     const order = orders[0];
 
-    const [items] = await pool.query(
+    const [items] = await pool(
       'SELECT * FROM order_items WHERE order_id = ?',
       [order.id]
     );

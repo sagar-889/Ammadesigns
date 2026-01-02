@@ -46,13 +46,13 @@ router.post('/', authenticateToken, async (req, res) => {
     }
     
     const [result] = await db.query(
-      'INSERT INTO services (title, description, price) VALUES (?, ?, ?)',
+      'INSERT INTO services (title, description, price) VALUES (?, ?, ?) RETURNING id',
       [title, description, price || null]
     );
     
     res.status(201).json({
       message: 'Service created successfully',
-      serviceId: result.insertId
+      serviceId: result[0].id
     });
   } catch (error) {
     console.error('Error creating service:', error);
