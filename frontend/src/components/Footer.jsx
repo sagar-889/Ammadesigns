@@ -33,9 +33,9 @@ const Footer = () => {
                         <h4>Support</h4>
                         <ul className="footer-links">
                             <li><Link to="/contact">Contact Us</Link></li>
-                            <li><Link to="/login">Admin Login</Link></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms of Use</a></li>
+                            <li><Link to="/track-order">Track Order</Link></li>
+                            <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+                            <li><Link to="/terms-conditions">Terms & Conditions</Link></li>
                         </ul>
                     </div>
 
