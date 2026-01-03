@@ -15,6 +15,7 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -26,6 +27,12 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    if (!agreedToTerms) {
+      setError('You must agree to the Terms & Conditions to continue');
+      setLoading(false);
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
@@ -139,6 +146,27 @@ const Signup = () => {
                 {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
               </button>
             </div>
+          </div>
+
+          <div className="form-group terms-checkbox">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                required
+              />
+              <span>
+                I agree to the{' '}
+                <Link to="/terms-conditions" target="_blank" rel="noopener noreferrer">
+                  Terms & Conditions
+                </Link>
+                {' '}and{' '}
+                <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </Link>
+              </span>
+            </label>
           </div>
 
           {error && <div className="error-message">⚠️ {error}</div>}

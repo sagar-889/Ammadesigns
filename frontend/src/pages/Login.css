@@ -371,3 +371,56 @@
         font-size: 13px;
     }
 }
+
+/* Terms & Conditions Checkbox */
+.terms-checkbox {
+    margin: 10px 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--secondary);
+}
+
+.checkbox-label span {
+    flex: 1;
+}
+
+.checkbox-label a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.checkbox-label a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .checkbox-label {
+        font-size: 13px;
+        gap: 10px;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        min-width: 16px;
+    }
+}
