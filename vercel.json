@@ -5,6 +5,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://ammadesigns.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
