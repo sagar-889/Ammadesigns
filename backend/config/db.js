@@ -1,8 +1,12 @@
 import pkg from 'pg';
 const { Pool } = pkg;
 import dotenv from 'dotenv';
+import dns from 'dns';
 
 dotenv.config();
+
+// Force IPv4 resolution to avoid IPv6 connection issues on Render
+dns.setDefaultResultOrder('ipv4first');
 
 // Don't use connectionString on Render - use individual params to force IPv4
 const pool = new Pool({
@@ -12,6 +16,8 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD || 'Sagar@#8897',
   database: process.env.DB_NAME || 'postgres',
   ssl: { rejectUnauthorized: false },
+  // Force IPv4 connection
+  family: 4,
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,
