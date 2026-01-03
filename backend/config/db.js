@@ -8,7 +8,13 @@ dotenv.config();
 const pool = process.env.DATABASE_URL 
   ? new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
+      ssl: { rejectUnauthorized: false },
+      // Force IPv4 to avoid IPv6 connection issues on Render
+      host: process.env.DB_HOST || 'db.cklxnpbibdmvcdwyqwkw.supabase.co',
+      port: process.env.DB_PORT || 5432,
+      user: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME || 'postgres'
     })
   : new Pool({
       host: process.env.DB_HOST,
