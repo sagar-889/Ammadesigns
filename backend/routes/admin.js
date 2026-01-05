@@ -54,7 +54,7 @@ router.post('/login', [
   const { username, password } = req.body;
 
   try {
-    const [rows] = await pool('SELECT * FROM admins WHERE username = ?', [username]);
+    const [rows] = await pool('SELECT * FROM admins WHERE username = $1', [username]);
 
     if (rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -101,7 +101,7 @@ router.post('/services', authenticateToken, [
 
   try {
     const [result] = await pool(
-      'INSERT INTO services (title, description, price) VALUES (?, ?, ?) RETURNING id',
+      'INSERT INTO services (title, description, price) VALUES ($1, $2, $3) RETURNING id',
       [title, description, price || null]
     );
     res.status(201).json({ id: result[0].id, message: 'Service created' });
@@ -116,7 +116,7 @@ router.put('/services/:id', authenticateToken, async (req, res) => {
 
   try {
     await pool(
-      'UPDATE services SET title = ?, description = ?, price = ? WHERE id = ?',
+      'UPDATE services SET title = $1, description = $2, price = $3 WHERE id = $4',
       [title, description, price || null, id]
     );
     res.json({ message: 'Service updated' });
@@ -129,7 +129,7 @@ router.delete('/services/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {
-    await pool('DELETE FROM services WHERE id = ?', [id]);
+    await pool('DELETE FROM services WHERE id = $1', [id]);
     res.json({ message: 'Service deleted' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete service' });
@@ -149,7 +149,7 @@ router.post('/gallery', authenticateToken, [
 
   try {
     const [result] = await pool(
-      'INSERT INTO gallery (image_url, title) VALUES (?, ?) RETURNING id',
+      'INSERT INTO gallery (image_url, title) VALUES ($1, $2) RETURNING id',
       [image_url, title || null]
     );
     res.status(201).json({ id: result[0].id, message: 'Gallery image added' });
@@ -164,7 +164,7 @@ router.put('/gallery/:id', authenticateToken, async (req, res) => {
 
   try {
     await pool(
-      'UPDATE gallery SET image_url = ?, title = ? WHERE id = ?',
+      'UPDATE gallery SET image_url = $1, title = $2 WHERE id = $3',
       [image_url, title || null, id]
     );
     res.json({ message: 'Gallery image updated' });
@@ -177,7 +177,7 @@ router.delete('/gallery/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {
-    await pool('DELETE FROM gallery WHERE id = ?', [id]);
+    await pool('DELETE FROM gallery WHERE id = $1', [id]);
     res.json({ message: 'Gallery image deleted' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete gallery image' });
@@ -207,7 +207,7 @@ router.post('/products', authenticateToken, [
 
   try {
     const [result] = await pool(
-      'INSERT INTO products (name, description, price, image_url, category, stock, is_available) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id',
+      'INSERT INTO products (name, description, price, image_url, category, stock, is_available) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
       [name, description, price, image_url || null, category || null, stock || 0, is_available !== false]
     );
     res.status(201).json({ id: result[0].id, message: 'Product created' });
@@ -222,7 +222,7 @@ router.put('/products/:id', authenticateToken, async (req, res) => {
 
   try {
     await pool(
-      'UPDATE products SET name = ?, description = ?, price = ?, image_url = ?, category = ?, stock = ?, is_available = ? WHERE id = ?',
+      'UPDATE products SET name = $1, description = $2, price = $3, image_url = $4, category = $5, stock = $6, is_available = $7 WHERE id = $8',
       [name, description, price, image_url || null, category || null, stock || 0, is_available !== false, id]
     );
     res.json({ message: 'Product updated' });
@@ -235,10 +235,29 @@ router.delete('/products/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {
-    await pool('DELETE FROM products WHERE id = ?', [id]);
-    res.json({ message: 'Product deleted' });
+    // Check if product exists
+    const [product] = await pool('SELECT * FROM products WHERE id = $1', [id]);
+    
+    if (!product || product.length === 0) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Check if product is in any orders
+    const [orderItems] = await pool('SELECT COUNT(*) as count FROM order_items WHERE product_id = $1', [id]);
+    
+    if (orderItems[0].count > 0) {
+      // Don't delete, just mark as inactive or return error
+      return res.status(400).json({ 
+        error: 'Cannot delete product that has been ordered. Consider marking it as out of stock instead.' 
+      });
+    }
+
+    // Delete the product
+    await pool('DELETE FROM products WHERE id = $1', [id]);
+    res.json({ message: 'Product deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete product' });
+    console.error('Delete product error:', error);
+    res.status(500).json({ error: 'Failed to delete product', details: error.message });
   }
 });
 
@@ -255,12 +274,12 @@ router.get('/orders', authenticateToken, async (req, res) => {
 // Get order details with items
 router.get('/orders/:id', authenticateToken, async (req, res) => {
   try {
-    const [orders] = await pool('SELECT * FROM orders WHERE id = ?', [req.params.id]);
+    const [orders] = await pool('SELECT * FROM orders WHERE id = $1', [req.params.id]);
     if (orders.length === 0) {
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    const [items] = await pool('SELECT * FROM order_items WHERE order_id = ?', [req.params.id]);
+    const [items] = await pool('SELECT * FROM order_items WHERE order_id = $1', [req.params.id]);
     res.json({ ...orders[0], items });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch order' });
@@ -273,7 +292,7 @@ router.put('/orders/:id/status', authenticateToken, async (req, res) => {
   const { order_status } = req.body;
 
   try {
-    await pool('UPDATE orders SET order_status = ? WHERE id = ?', [order_status, id]);
+    await pool('UPDATE orders SET order_status = $1 WHERE id = $2', [order_status, id]);
     res.json({ message: 'Order status updated' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update order status' });
@@ -286,7 +305,7 @@ router.put('/orders/:id', authenticateToken, async (req, res) => {
   const { order_status } = req.body;
 
   try {
-    await pool('UPDATE orders SET order_status = ? WHERE id = ?', [order_status, id]);
+    await pool('UPDATE orders SET order_status = $1 WHERE id = $2', [order_status, id]);
     res.json({ message: 'Order updated' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update order' });
