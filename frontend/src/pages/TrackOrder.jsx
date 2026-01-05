@@ -90,11 +90,11 @@ const TrackOrder = () => {
     <div className="track-order-page">
       <div className="container">
         <div className="track-header reveal-up">
-          <h1>Track Your Order</h1>
+          <h1>My Orders</h1>
           <p>
             {isAuthenticated 
               ? 'View your order status and delivery information' 
-              : 'Enter your order number to track your order status'}
+              : 'Enter your order number to view your order status'}
           </p>
         </div>
 
@@ -169,7 +169,7 @@ const TrackOrder = () => {
                 />
               </div>
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Tracking...' : 'Track Order'}
+                {loading ? 'Loading...' : 'View Order'}
               </button>
             </form>
 

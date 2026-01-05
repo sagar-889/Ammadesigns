@@ -123,7 +123,7 @@ const Navbar = () => {
                   className={isActive('/track-order') ? 'active' : ''} 
                   onClick={() => setIsOpen(false)}
                 >
-                  Track Order
+                  My Orders
                 </Link>
               </li>
               <li>
