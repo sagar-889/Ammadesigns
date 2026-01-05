@@ -22,16 +22,12 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 errors (token expired or invalid)
+// Handle response errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Token is invalid or expired
-      localStorage.removeItem('customerToken');
-      localStorage.removeItem('token');
-      // Don't redirect here, let the component handle it
-    }
+    // Don't auto-remove tokens here, let components handle it
+    // This prevents race conditions with AuthContext
     return Promise.reject(error);
   }
 );

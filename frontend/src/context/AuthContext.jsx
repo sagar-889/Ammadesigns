@@ -21,15 +21,36 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     const token = localStorage.getItem('customerToken');
+    console.log('Checking auth, token exists:', !!token);
+    
     if (token) {
       try {
         const response = await api.get('/auth/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setUser(response.data);
+        console.log('Profile response:', response.data);
+        
+        if (response.data) {
+          setUser(response.data);
+        } else {
+          console.log('No user data in response, logging out');
+          localStorage.removeItem('customerToken');
+          setUser(null);
+        }
       } catch (error) {
-        localStorage.removeItem('customerToken');
+        console.error('Auth check failed:', error.response?.status, error.message);
+        // Only remove token if it's actually invalid (401/403)
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          console.log('Token invalid, logging out');
+          localStorage.removeItem('customerToken');
+          setUser(null);
+        } else {
+          console.log('Network or other error, keeping token');
+        }
+        // For network errors or other issues, keep the token and try again later
       }
+    } else {
+      console.log('No token found');
     }
     setLoading(false);
   };
