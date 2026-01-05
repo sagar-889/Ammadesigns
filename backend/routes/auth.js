@@ -22,14 +22,14 @@ router.post('/signup', [
 
   try {
     // Check if customer already exists with this phone
-    const [existingPhone] = await pool('SELECT * FROM customers WHERE phone = ?', [phone]);
+    const [existingPhone] = await pool('SELECT * FROM customers WHERE phone = $1', [phone]);
     if (existingPhone.length > 0) {
       return res.status(400).json({ error: 'Phone number already registered' });
     }
 
     // Check if email is provided and already exists
     if (email) {
-      const [existingEmail] = await pool('SELECT * FROM customers WHERE email = ?', [email]);
+      const [existingEmail] = await pool('SELECT * FROM customers WHERE email = $1', [email]);
       if (existingEmail.length > 0) {
         return res.status(400).json({ error: 'Email already registered' });
       }
@@ -41,7 +41,7 @@ router.post('/signup', [
     // Create customer - use phone as email if email not provided
     const customerEmail = email || `${phone}@phone.local`;
     const [result] = await pool(
-      'INSERT INTO customers (name, email, phone, password_hash, address) VALUES (?, ?, ?, ?, ?) RETURNING id',
+      'INSERT INTO customers (name, email, phone, password_hash, address) VALUES ($1, $2, $3, $4, $5) RETURNING id',
       [name, customerEmail, phone, password_hash, address || null]
     );
 
@@ -98,8 +98,8 @@ router.post('/login', [
     // Regular customer login
     const isEmail = identifier.includes('@');
     const query = isEmail 
-      ? 'SELECT * FROM customers WHERE email = ?' 
-      : 'SELECT * FROM customers WHERE phone = ?';
+      ? 'SELECT * FROM customers WHERE email = $1' 
+      : 'SELECT * FROM customers WHERE phone = $1';
     
     const [rows] = await pool(query, [identifier]);
     
@@ -149,12 +149,23 @@ router.get('/profile', async (req, res) => {
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     
+    // Allow both customer and admin tokens
+    if (verified.type === 'admin') {
+      // Return admin profile
+      return res.json({
+        id: verified.id,
+        name: 'Admin',
+        email: verified.email,
+        type: 'admin'
+      });
+    }
+    
     if (verified.type !== 'customer') {
       return res.status(403).json({ error: 'Invalid token type' });
     }
 
     const [rows] = await pool(
-      'SELECT id, name, email, phone, address, created_at FROM customers WHERE id = ?',
+      'SELECT id, name, email, phone, address, created_at FROM customers WHERE id = $1',
       [verified.id]
     );
 
@@ -193,15 +204,15 @@ router.put('/profile', [
     const values = [];
 
     if (name) {
-      updates.push('name = ?');
+      updates.push('name = $' + (values.length + 1));
       values.push(name);
     }
     if (phone) {
-      updates.push('phone = ?');
+      updates.push('phone = $' + (values.length + 1));
       values.push(phone);
     }
     if (address !== undefined) {
-      updates.push('address = ?');
+      updates.push('address = $' + (values.length + 1));
       values.push(address);
     }
 
@@ -211,7 +222,7 @@ router.put('/profile', [
 
     values.push(verified.id);
     await pool(
-      `UPDATE customers SET ${updates.join(', ')} WHERE id = ?`,
+      `UPDATE customers SET ${updates.join(', ')} WHERE id = $` + values.length,
       values
     );
 
@@ -238,14 +249,14 @@ router.get('/orders', async (req, res) => {
     }
 
     const [orders] = await pool(
-      'SELECT * FROM orders WHERE customer_id = ? ORDER BY created_at DESC',
+      'SELECT * FROM orders WHERE customer_id = $1 ORDER BY created_at DESC',
       [verified.id]
     );
 
     // Get order items for each order
     for (let order of orders) {
       const [items] = await pool(
-        'SELECT * FROM order_items WHERE order_id = ?',
+        'SELECT * FROM order_items WHERE order_id = $1',
         [order.id]
       );
       order.items = items;
@@ -272,7 +283,7 @@ router.post('/reset-password', [
 
   try {
     // Check if customer exists with this phone number
-    const [rows] = await pool('SELECT * FROM customers WHERE phone = ?', [phone]);
+    const [rows] = await pool('SELECT * FROM customers WHERE phone = $1', [phone]);
     
     if (rows.length === 0) {
       return res.status(404).json({ error: 'No account found with this phone number' });
@@ -283,7 +294,7 @@ router.post('/reset-password', [
 
     // Update password
     await pool(
-      'UPDATE customers SET password_hash = ? WHERE phone = ?',
+      'UPDATE customers SET password_hash = $1 WHERE phone = $2',
       [password_hash, phone]
     );
 
