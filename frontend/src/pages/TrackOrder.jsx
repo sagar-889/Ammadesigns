@@ -25,12 +25,17 @@ const TrackOrder = () => {
 
   const checkUserOrders = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('customerToken');
+      if (!token) {
+        setHasOrders(false);
+        return;
+      }
+      
       const response = await api.get('/auth/orders', {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      if (response.data.success && response.data.orders.length > 0) {
+      if (response.data.success && response.data.orders && response.data.orders.length > 0) {
         setHasOrders(true);
         setUserOrders(response.data.orders);
         // Auto-load the most recent order

@@ -251,9 +251,10 @@ router.get('/orders', async (req, res) => {
       order.items = items;
     }
 
-    res.json(orders);
+    res.json({ success: true, orders });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch orders' });
+    console.error('Failed to fetch orders:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch orders' });
   }
 });
 
