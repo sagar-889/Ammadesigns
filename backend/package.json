@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "fix-images": "node scripts/fix-image-urls.js"
+    "fix-images": "node scripts/fix-image-urls.js",
+    "migrate-status": "node scripts/migrate-status-tracking.js"
   },
   "keywords": [],
   "author": "",

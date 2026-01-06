@@ -1,20 +1,38 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import api from '../config/api';
 import { useCart } from '../context/CartContext';
 import './Shop.css';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [loading, setLoading] = useState(true);
+    const [searchParams, setSearchParams] = useSearchParams();
     const { addToCart } = useCart();
+
+    const searchQuery = searchParams.get('search') || '';
 
     useEffect(() => {
         fetchProducts();
         fetchCategories();
     }, [selectedCategory]);
+
+    useEffect(() => {
+        // Filter products based on search query
+        if (searchQuery) {
+            const filtered = products.filter(product =>
+                product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                product.category?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredProducts(filtered);
+        } else {
+            setFilteredProducts(products);
+        }
+    }, [searchQuery, products]);
 
     const fetchProducts = async () => {
         try {
@@ -43,11 +61,24 @@ const Shop = () => {
         </div>
     );
 
+    const displayProducts = filteredProducts;
+
     return (
         <div className="shop-page">
             <header className="page-header">
                 <div className="container">
                     <h1 className="reveal-up">Collection</h1>
+                    {searchQuery && (
+                        <p className="search-results-text reveal-up" style={{ animationDelay: '0.05s' }}>
+                            {displayProducts.length} result{displayProducts.length !== 1 ? 's' : ''} for "{searchQuery}"
+                            <button 
+                                onClick={() => setSearchParams({})} 
+                                className="clear-search-btn"
+                            >
+                                Clear Search
+                            </button>
+                        </p>
+                    )}
                     <div className="category-tabs reveal-up" style={{ animationDelay: '0.1s' }}>
                         <button
                             className={!selectedCategory ? 'active' : ''}
@@ -70,8 +101,21 @@ const Shop = () => {
 
             <section className="section bg-soft">
                 <div className="container">
-                    <div className="products-grid">
-                        {products.map((product, index) => (
+                    {displayProducts.length === 0 ? (
+                        <div className="no-results">
+                            <p>No products found{searchQuery ? ` for "${searchQuery}"` : ''}.</p>
+                            {searchQuery && (
+                                <button 
+                                    onClick={() => setSearchParams({})} 
+                                    className="btn btn-primary"
+                                >
+                                    View All Products
+                                </button>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="products-grid">
+                            {displayProducts.map((product, index) => (
                             <div key={product.id} className="product-card reveal-up" style={{ animationDelay: `${index * 0.05}s` }}>
                                 <Link to={`/product/${product.id}`} className="product-image">
                                     <img src={product.image_url} alt={product.name} />
@@ -93,7 +137,8 @@ const Shop = () => {
                                 </div>
                             </div>
                         ))}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

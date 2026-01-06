@@ -7,6 +7,8 @@ import './Navbar.css';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { getCartCount } = useCart();
@@ -14,6 +16,10 @@ const Navbar = () => {
   const shopName = import.meta.env.VITE_SHOP_NAME || 'Sri Ladies Tailor';
   const cartCount = getCartCount();
   const navbarRef = useRef(null);
+
+  // Determine if we should show home page navigation
+  const isHomePage = location.pathname === '/';
+  const showHomeNav = isHomePage && !isAuthenticated;
 
   // Handle scroll effect
   useEffect(() => {
@@ -63,6 +69,16 @@ const Navbar = () => {
 
   const isActive = (path) => location.pathname === path;
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+      setShowSearch(false);
+      setIsOpen(false);
+    }
+  };
+
   return (
     <nav ref={navbarRef} className={`navbar ${scrolled ? 'scrolled' : ''} ${isOpen ? 'menu-open' : ''}`}>
       <div className="container">
@@ -99,48 +115,81 @@ const Navbar = () => {
           {/* Navigation Menu */}
           <div className={`nav-menu-container ${isOpen ? 'active' : ''}`}>
             <ul className="nav-links">
-              <li>
-                <Link 
-                  to="/" 
-                  className={isActive('/') ? 'active' : ''} 
-                  onClick={() => setIsOpen(false)}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/gallery" 
-                  className={isActive('/gallery') ? 'active' : ''} 
-                  onClick={() => setIsOpen(false)}
-                >
-                  The Lookbook
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/track-order" 
-                  className={isActive('/track-order') ? 'active' : ''} 
-                  onClick={() => setIsOpen(false)}
-                >
-                  My Orders
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/contact" 
-                  className={isActive('/contact') ? 'active' : ''} 
-                  onClick={() => setIsOpen(false)}
-                >
-                  Contact
-                </Link>
-              </li>
+              {/* Show Home/Gallery/Contact only on home page before login */}
+              {showHomeNav && (
+                <>
+                  <li>
+                    <Link 
+                      to="/" 
+                      className={isActive('/') ? 'active' : ''} 
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/gallery" 
+                      className={isActive('/gallery') ? 'active' : ''} 
+                      onClick={() => setIsOpen(false)}
+                    >
+                      The Lookbook
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/contact" 
+                      className={isActive('/contact') ? 'active' : ''} 
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Contact
+                    </Link>
+                  </li>
+                </>
+              )}
+
+              {/* Show Shop and My Orders when logged in */}
+              {isAuthenticated && (
+                <>
+                  <li>
+                    <Link 
+                      to="/shop" 
+                      className={isActive('/shop') ? 'active' : ''} 
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Shop
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/track-order" 
+                      className={isActive('/track-order') ? 'active' : ''} 
+                      onClick={() => setIsOpen(false)}
+                    >
+                      My Orders
+                    </Link>
+                  </li>
+                </>
+              )}
               
               {/* User Actions - Only show on non-admin pages */}
               {!location.pathname.startsWith('/admin') && (
                 <>
-                  {/* Cart Button - Show only when logged in and not on home page */}
-                  {isAuthenticated && location.pathname !== '/' && (
+                  {/* Search Button */}
+                  {isAuthenticated && (
+                    <li className="search-item">
+                      <button 
+                        className="search-toggle-button" 
+                        onClick={() => setShowSearch(!showSearch)}
+                        aria-label="Search products"
+                      >
+                        <span className="search-icon" aria-hidden="true">🔍</span>
+                      </button>
+                    </li>
+                  )}
+
+                  {/* Cart Button - Show only when logged in */}
+                  {isAuthenticated && (
                     <li className="cart-item">
                       <button 
                         className="cart-button" 
@@ -200,6 +249,23 @@ const Navbar = () => {
                 </>
               )}
             </ul>
+
+            {/* Search Bar */}
+            {showSearch && isAuthenticated && (
+              <form className="search-form" onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products..."
+                  className="search-input"
+                  autoFocus
+                />
+                <button type="submit" className="search-submit-btn">
+                  Search
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>
