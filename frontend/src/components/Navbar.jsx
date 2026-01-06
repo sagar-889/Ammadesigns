@@ -86,13 +86,23 @@ const Navbar = () => {
           {/* Logo */}
           <Link 
             to="/" 
-            className="logo"
+            className="logo-brand"
             onClick={() => setIsOpen(false)}
             aria-label="Home"
           >
-            {shopName.split(' ')[0]}
-            <span>{shopName.split(' ').slice(1).join(' ')}</span>
+            AMMA COLLECTIONS
           </Link>
+
+          {/* Search Icon - Desktop */}
+          {!isAuthenticated && isHomePage && (
+            <button 
+              className="search-icon-btn"
+              onClick={() => setShowSearch(!showSearch)}
+              aria-label="Search"
+            >
+              🔍
+            </button>
+          )}
 
           {/* Mobile Menu Toggle */}
           <button 
