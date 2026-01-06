@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "fix-images": "node scripts/fix-image-urls.js"
   },
   "keywords": [],
   "author": "",

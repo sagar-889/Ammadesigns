@@ -37,7 +37,17 @@ router.post('/upload', authenticateToken, upload.single('image'), (req, res) => 
   if (!req.file) {
     return res.status(400).json({ error: 'Please upload a file' });
   }
-  const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+  
+  // Check if request came through HTTPS (handles reverse proxies like Render)
+  const protocol = req.get('x-forwarded-proto') || req.protocol;
+  const host = req.get('host');
+  
+  // Force HTTPS for production domains
+  const useHttps = protocol === 'https' || host.includes('onrender.com') || host.includes('vercel.app');
+  const finalProtocol = useHttps ? 'https' : 'http';
+  
+  const imageUrl = `${finalProtocol}://${host}/uploads/${req.file.filename}`;
+  
   res.json({ imageUrl });
 });
 

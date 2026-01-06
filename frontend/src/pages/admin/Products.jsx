@@ -123,13 +123,16 @@ const Products = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
 
     try {
       await api.delete(`/admin/products/${id}`);
+      alert('Product deleted successfully');
       fetchProducts();
     } catch (err) {
-      alert('Failed to delete product');
+      const errorMessage = err.response?.data?.error || 'Failed to delete product';
+      alert(errorMessage);
+      console.error('Delete error:', err.response?.data);
     }
   };
 
